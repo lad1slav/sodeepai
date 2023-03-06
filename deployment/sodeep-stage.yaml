@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sodeep-ai-stage
+spec:
+  selector:
+    matchLabels:
+      app: sodeep-ai-stage
+  template:
+    metadata:
+      labels:
+        app: sodeep-ai-stage
+    spec:
+      serviceAccountName: default
+#      terminationGracePeriodSeconds: 5
+#      securityContext:
+#        fsGroup: 1000
+#        runAsGroup: 1000
+#        runAsNonRoot: true
+#        runAsUser: 1000
+      containers:
+        - name: sodeep-ai-stage
+#          securityContext:
+#            allowPrivilegeEscalation: false
+#            capabilities:
+#              drop:
+#                - all
+#            privileged: false
+#            readOnlyRootFilesystem: true
+          image: lad1slavv/sodeep-repo:0.0.2
+#          volumeMounts:
+#            - name: publickey
+#              mountPath: "/tmp/.ssh"
+#              readOnly: true
+#            - mountPath: /tmp
+#              name: tmp
+          env:
+            - name: PORT
+              value: "8080"
+            - name: OPENAI_TOKEN
+              value: "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"
+#          resources:
+#            requests:
+#              cpu: 100m
+#              memory: 64Mi
+#            limits:
+#              cpu: 250m
+#              memory: 128Mi
+#
+#          readinessProbe:
+#            httpGet:
+#              path: /ready
+#              port: 8080
+#            initialDelaySeconds: 10
+#            periodSeconds: 5
+#            timeoutSeconds: 10
+#
+#      volumes:
+#        - name: publickey
+#          secret:
+#            secretName: jwt-key
+#            items:
+#              - key: jwtRS256.key.pub
+#                path: publickey
+#        - emptyDir: {}
+#          name: tmp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sodeep-ai-stage
+spec:
+  type: LoadBalancer
+  selector:
+    app: sodeep-ai-stage
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

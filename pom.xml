@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.vmsd</groupId>
 	<artifactId>sodeepai</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.10</version>
 	<name>sodeepai</name>
 	<description>Soofuckingdeep AI API</description>
 	<properties>

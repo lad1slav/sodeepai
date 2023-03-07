@@ -1,5 +1,9 @@
 # Getting Started
 
+### OpenAI Token ENV
+```
+OPENAI_TOKEN="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"
+```
 ### Build
 ```
 mvn clean install

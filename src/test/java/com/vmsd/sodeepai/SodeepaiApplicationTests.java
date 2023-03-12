@@ -2,7 +2,6 @@ package com.vmsd.sodeepai;
 
 import com.theokanning.openai.image.CreateImageRequest;
 import com.theokanning.openai.service.OpenAiService;
-import com.vmsd.sodeepai.controller.TextController;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

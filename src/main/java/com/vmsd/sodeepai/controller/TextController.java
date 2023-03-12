@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -54,13 +53,13 @@ public class TextController {
                         imageContext.set(chatCompletionChoice.getMessage().getContent());
                     });
         } catch (Exception e) {
-            logg.error(e.getMessage());
+            logg.error(e.getLocalizedMessage());
             e.printStackTrace();
         }
 
         logg.info("Creating story...");
         CompletionRequest completionStoryRequest = CompletionRequest.builder()
-                .model("davinci")
+                .model("ada")
                 .prompt("Please write crazy amazing story in 20 sentences about this context" +
                         ": \"" + prompt + "\"")
                 .user("user")
@@ -72,28 +71,42 @@ public class TextController {
                 logg.info(completionChoice.toString());
             });
         } catch (Exception e) {
-            logg.error(e.getMessage());
+            logg.error(e.getLocalizedMessage());
             e.printStackTrace();
         }
 
-        logg.info("Creating image...");
-        CreateImageRequest request = CreateImageRequest.builder()
-                .prompt(prompt + ", hd gddr 1800x720 HQ HD nvidia lightning")
-                .n(4)
+        logg.info("Creating image for: " + prompt);
+        CreateImageRequest promptRequest = CreateImageRequest.builder()
+                .prompt(prompt + ", hd high quality resolution 1800x720 shaders gddr HQ HD nvidia lightning")
                 .build();
-
         logg.info("Image is located at:");
         answer.set(answer.get() + "Image is located at:<br><br>");
-        try {
-            service.createImage(request).getData().forEach(data->{
-                logg.info(data.getUrl());
+        String promptImageUrl = service.createImage(promptRequest).getData().get(0).getUrl();
+        logg.info(promptImageUrl);
 
-                answer.set(answer.get() + "<a href=\"" + data.getUrl() + "\">" + data.getUrl() + "</a><br><br>");
-            });
-        } catch (Exception e) {
-            logg.error(e.getMessage());
-            e.printStackTrace();
-        }
+        answer.set(answer.get() + "<a href=\"" + promptImageUrl + "\">" + promptImageUrl + "</a><br><br>");
+
+        logg.info(imageContext.get().split("\\.").length +
+                " | Image context: " + imageContext.get().replace("\n", ""));
+
+        Arrays.stream(imageContext.get().replace("\n", "").split("\\.")).forEach(context -> {
+            logg.info("Creating image for: " + context);
+            CreateImageRequest request = CreateImageRequest.builder()
+                    .prompt(context + ", hd high quality resolution 1800x720 shaders gddr HQ HD nvidia lightning")
+                    .build();
+
+            logg.info("Image is located at:");
+            answer.set(answer.get() + "Image is located at:<br><br>");
+            try {
+                String imageUrl = service.createImage(request).getData().get(0).getUrl();
+                logg.info(imageUrl);
+
+                answer.set(answer.get() + "<a href=\"" + imageUrl + "\">" + imageUrl + "</a><br><br>");
+            } catch (Exception e) {
+                logg.error(e.getLocalizedMessage());
+                e.printStackTrace();
+            }
+        });
 
         return "hello i'm new neuro by lad1slavv<br><br>" + answer + "<br><br>end of session...";
     }

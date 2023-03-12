@@ -38,7 +38,7 @@ spec:
             - name: PORT
               value: "8080"
             - name: OPENAI_TOKEN
-              value: "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"
+              value: "token"
 #          resources:
 #            requests:
 #              cpu: 100m

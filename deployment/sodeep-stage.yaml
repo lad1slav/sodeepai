@@ -27,7 +27,7 @@ spec:
 #                - all
 #            privileged: false
 #            readOnlyRootFilesystem: true
-          image: lad1slavv/sodeep-repo:0.0.10
+          image: lad1slavv/sodeep-repo:0.0.12
 #          volumeMounts:
 #            - name: publickey
 #              mountPath: "/tmp/.ssh"

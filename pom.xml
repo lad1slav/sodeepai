@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.vmsd</groupId>
 	<artifactId>sodeepai</artifactId>
-	<version>0.0.12</version>
+	<version>0.1.12</version>
 	<name>sodeepai</name>
 	<description>Soofuckingdeep AI API</description>
 	<properties>
@@ -20,6 +20,29 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-data-redis</artifactId>-->
+<!--&lt;!&ndash;			<exclusions>&ndash;&gt;-->
+<!--&lt;!&ndash;				<exclusion>&ndash;&gt;-->
+<!--&lt;!&ndash;					<groupId>io.lettuce.lettuce-core</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;					<artifactId>lettuce</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;				</exclusion>&ndash;&gt;-->
+<!--&lt;!&ndash;			</exclusions>&ndash;&gt;-->
+<!--			<version>2.7.2</version>-->
+<!--		</dependency>-->
+
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<type>jar</type>
 		</dependency>
 
 		<dependency>

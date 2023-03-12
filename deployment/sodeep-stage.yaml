@@ -27,7 +27,7 @@ spec:
 #                - all
 #            privileged: false
 #            readOnlyRootFilesystem: true
-          image: lad1slavv/sodeep-repo:0.0.12
+          image: lad1slavv/sodeep-repo:0.1.12
 #          volumeMounts:
 #            - name: publickey
 #              mountPath: "/tmp/.ssh"
@@ -38,7 +38,7 @@ spec:
             - name: PORT
               value: "8080"
             - name: OPENAI_TOKEN
-              value: "token"
+              value: "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"
 #          resources:
 #            requests:
 #              cpu: 100m

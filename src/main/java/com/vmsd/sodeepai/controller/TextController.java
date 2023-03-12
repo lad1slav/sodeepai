@@ -5,9 +5,12 @@ import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.image.CreateImageRequest;
 import com.theokanning.openai.service.OpenAiService;
+import com.vmsd.sodeepai.model.Cache;
+import com.vmsd.sodeepai.service.GeneratorService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +28,9 @@ import java.util.concurrent.atomic.AtomicReference;
 public class TextController {
 
     private static final Logger logg = LoggerFactory.getLogger(TextController.class);
+
+    @Autowired
+    private GeneratorService generatorService;
 
     @Value("${OPENAI_TOKEN}")
     String token;
@@ -50,6 +56,7 @@ public class TextController {
                     .getChoices()
                     .forEach(chatCompletionChoice -> {
                         answer.set(answer.get() + chatCompletionChoice.getMessage().getContent() + "<br><br>");
+                        generatorService.savePromptToCache(prompt, chatCompletionChoice.getMessage().getContent() , false);
                         imageContext.set(chatCompletionChoice.getMessage().getContent());
                     });
         } catch (Exception e) {
@@ -68,6 +75,7 @@ public class TextController {
         try {
             service.createCompletion(completionStoryRequest).getChoices().forEach(completionChoice -> {
                 answer.set(answer.get() + completionChoice.getText() + "<br><br>");
+                generatorService.savePromptToCache(prompt, completionChoice.getText(), false);
                 logg.info(completionChoice.toString());
             });
         } catch (Exception e) {
@@ -85,6 +93,7 @@ public class TextController {
         logg.info(promptImageUrl);
 
         answer.set(answer.get() + "<a href=\"" + promptImageUrl + "\">" + promptImageUrl + "</a><br><br>");
+        generatorService.savePromptToCache(prompt, promptImageUrl, true);
 
         logg.info(imageContext.get().split("\\.").length +
                 " | Image context: " + imageContext.get().replace("\n", ""));
@@ -102,11 +111,28 @@ public class TextController {
                 logg.info(imageUrl);
 
                 answer.set(answer.get() + "<a href=\"" + imageUrl + "\">" + imageUrl + "</a><br><br>");
+                generatorService.savePromptToCache(prompt, imageUrl, true);
+
             } catch (Exception e) {
                 logg.error(e.getLocalizedMessage());
                 e.printStackTrace();
             }
         });
+
+        return "hello i'm new neuro by lad1slavv<br><br>" + answer + "<br><br>end of session...";
+    }
+
+    @GetMapping("/cache")
+    public String getAllCache() {
+        String answer = "";
+
+        for (Cache cache : generatorService.getAllCache()) {
+            if (cache.getType().equals(Cache.RecordType.IMAGE)) {
+                answer+=cache + "<br><a href=\"" + cache.getContext() + "\">" + cache.getContext() + "</a><br><br>";
+            } else {
+                answer+=cache + "<br><br>";
+            }
+        }
 
         return "hello i'm new neuro by lad1slavv<br><br>" + answer + "<br><br>end of session...";
     }

@@ -20,6 +20,7 @@ docker push lad1slavv/sodeep-repo
 ```
 ### Kubernetes Push
 ```
+kubectl apply -f deployment/sodeep-pvc-stage.yaml
 kubectl apply -f deployment/sodeep-stage.yaml
 ```
 ### Docker Run Access
@@ -28,6 +29,8 @@ http://localhost:8080/chat?prompt=any-text
 ```
 ### Kubernetes Access
 ```
+kubectl exec -ti sodeep-ai-stage-585db5658d-d8t62 -c reddis-db-stage -- /bin/bash
+
 kubectl get services
 
 Use EXTERNAL-IP for 'sodeep-ai-stage' service to access

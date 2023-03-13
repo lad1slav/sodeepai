@@ -6,6 +6,7 @@ spec:
   selector:
     matchLabels:
       app: sodeep-ai-stage
+  replicas: 1
   template:
     metadata:
       labels:
@@ -18,7 +19,25 @@ spec:
 #        runAsGroup: 1000
 #        runAsNonRoot: true
 #        runAsUser: 1000
+      volumes:
+#        - name: tmp
+#          emptyDir: { }
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: reddis-pv-claim
       containers:
+        - name: reddis-db-stage
+          image: redis
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+#            - name: tmp
+#              mountPath: /tmp
+            - name: redis-data
+              mountPath: /data
+#              mountPropagation: HostToContainer
+          ports:
+            - protocol: TCP
+              containerPort: 6379
         - name: sodeep-ai-stage
 #          securityContext:
 #            allowPrivilegeEscalation: false
@@ -27,7 +46,7 @@ spec:
 #                - all
 #            privileged: false
 #            readOnlyRootFilesystem: true
-          image: lad1slavv/sodeep-repo:0.1.12
+          image: lad1slavv/sodeep-repo:0.1.15
 #          volumeMounts:
 #            - name: publickey
 #              mountPath: "/tmp/.ssh"
@@ -38,7 +57,7 @@ spec:
             - name: PORT
               value: "8080"
             - name: OPENAI_TOKEN
-              value: "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"
+              value: "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"
 #          resources:
 #            requests:
 #              cpu: 100m

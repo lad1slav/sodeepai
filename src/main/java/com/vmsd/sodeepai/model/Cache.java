@@ -19,5 +19,4 @@ public class Cache implements Serializable {
     private String prompt;
     private RecordType type;
     private String context;
-    // ...
 }

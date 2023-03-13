@@ -8,13 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class GeneratorService {
+public class CacheService {
 
     private static final Logger logg = LoggerFactory.getLogger(TextController.class);
 

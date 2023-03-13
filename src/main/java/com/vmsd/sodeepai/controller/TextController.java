@@ -6,7 +6,7 @@ import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.image.CreateImageRequest;
 import com.theokanning.openai.service.OpenAiService;
 import com.vmsd.sodeepai.model.Cache;
-import com.vmsd.sodeepai.service.GeneratorService;
+import com.vmsd.sodeepai.service.CacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class TextController {
     private static final Logger logg = LoggerFactory.getLogger(TextController.class);
 
     @Autowired
-    private GeneratorService generatorService;
+    private CacheService generatorService;
 
     @Value("${OPENAI_TOKEN}")
     String token;

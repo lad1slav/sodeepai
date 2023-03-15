@@ -1,0 +1,61 @@
+body, h1, h2, h3, h4, h5, h6  {
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+}
+
+.chat-header {
+	color: #424242;
+}
+
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.message-sender {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.message-content {
+  margin-bottom: 5px;
+}
+
+.message-timestamp {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.chat-input {
+  border: none !important;
+}
+
+.chat-input div {
+	border: none !important;
+	border-bottom: none !important;
+	border-radius: 0;
+}
+
+.chat-input button {
+  height: 40px;
+  border: none;
+  background-color: #2f8cc9;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.chat-input button:hover {
+  background-color: #2674a7;
+}

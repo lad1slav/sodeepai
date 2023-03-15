@@ -5,17 +5,14 @@ import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.image.CreateImageRequest;
 import com.theokanning.openai.service.OpenAiService;
-import com.vmsd.sodeepai.model.Cache;
+import com.vmsd.sodeepai.model.Message;
 import com.vmsd.sodeepai.service.CacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -23,11 +20,11 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
-@RequestMapping(value = "/chat")
+@RequestMapping(value = "/genify")
 @Slf4j
-public class TextController {
+public class GenifyController {
 
-    private static final Logger logg = LoggerFactory.getLogger(TextController.class);
+    private static final Logger logg = LoggerFactory.getLogger(GenifyController.class);
 
     @Autowired
     private CacheService generatorService;
@@ -35,7 +32,7 @@ public class TextController {
     @Value("${OPENAI_TOKEN}")
     String token;
 
-    @GetMapping
+    @GetMapping("/")
     public String getTextForPrompt(@RequestParam String prompt) {
         OpenAiService service = new OpenAiService(token, Duration.ofMinutes(2));
 
@@ -126,11 +123,11 @@ public class TextController {
     public String getAllCache() {
         String answer = "";
 
-        for (Cache cache : generatorService.getAllCache()) {
-            if (cache.getType().equals(Cache.RecordType.IMAGE)) {
-                answer+=cache + "<br><a href=\"" + cache.getContext() + "\">" + cache.getContext() + "</a><br><br>";
+        for (Message message : generatorService.getAllCache()) {
+            if (message.getType().equals(Message.RecordType.IMAGE)) {
+                answer+= message + "<br><a href=\"" + message.getContext() + "\">" + message.getContext() + "</a><br><br>";
             } else {
-                answer+=cache + "<br><br>";
+                answer+= message + "<br><br>";
             }
         }
 

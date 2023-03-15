@@ -20,8 +20,6 @@ spec:
 #        runAsNonRoot: true
 #        runAsUser: 1000
       volumes:
-#        - name: tmp
-#          emptyDir: { }
         - name: redis-data
           persistentVolumeClaim:
             claimName: reddis-pv-claim
@@ -30,15 +28,22 @@ spec:
           image: redis
           imagePullPolicy: IfNotPresent
           volumeMounts:
-#            - name: tmp
-#              mountPath: /tmp
             - name: redis-data
               mountPath: /data
-#              mountPropagation: HostToContainer
           ports:
             - protocol: TCP
               containerPort: 6379
+        - name: ukrainian-chat-stage
+          imagePullPolicy: IfNotPresent
+          image: lad1slavv/ukrainian-chat-repo:0.0.1
+          env:
+            - name: PORT
+              value: "8081"
+          ports:
+            - protocol: TCP
+              containerPort: 8081
         - name: sodeep-ai-stage
+          imagePullPolicy: IfNotPresent
 #          securityContext:
 #            allowPrivilegeEscalation: false
 #            capabilities:
@@ -46,7 +51,7 @@ spec:
 #                - all
 #            privileged: false
 #            readOnlyRootFilesystem: true
-          image: lad1slavv/sodeep-repo:0.1.15
+          image: lad1slavv/sodeep-repo:0.3.18
 #          volumeMounts:
 #            - name: publickey
 #              mountPath: "/tmp/.ssh"

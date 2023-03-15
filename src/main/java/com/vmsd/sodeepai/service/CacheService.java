@@ -1,7 +1,7 @@
 package com.vmsd.sodeepai.service;
 
-import com.vmsd.sodeepai.controller.TextController;
-import com.vmsd.sodeepai.model.Cache;
+import com.vmsd.sodeepai.controller.MessageController;
+import com.vmsd.sodeepai.model.Message;
 import com.vmsd.sodeepai.repository.RedisCacheRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,30 +15,41 @@ import java.util.UUID;
 @Service
 public class CacheService {
 
-    private static final Logger logg = LoggerFactory.getLogger(TextController.class);
+    private static final Logger logg = LoggerFactory.getLogger(MessageController.class);
 
     @Autowired
     private RedisCacheRepository redisCacheRepository;
 
-    public Cache savePromptToCache(String prompt, String context, boolean isImage) {
+    public Message savePromptToCache(String prompt, String context, boolean isImage) {
         logg.info("Saving to cache: ");
-        Cache cacheContext = Cache.builder()
+        Message messageContext = com.vmsd.sodeepai.model.Message.builder()
                 .id(UUID.randomUUID().toString())
                 .prompt(prompt)
                 .context(context)
-                .type(isImage ? Cache.RecordType.IMAGE : Cache.RecordType.MESSAGE)
+                .type(isImage ? Message.RecordType.IMAGE : Message.RecordType.MESSAGE)
                 .build();
-        logg.info(cacheContext.toString());
+        logg.info(messageContext.toString());
 
-        redisCacheRepository.save(cacheContext);
+        redisCacheRepository.save(messageContext);
 
-        return cacheContext;
+        return messageContext;
     }
 
-    public List<Cache> getAllCache() {
+    public String saveMessageToCache(Message message) {
+        logg.info("Saving message to cache: " + message);
+
+        return redisCacheRepository.save(message).getId();
+    }
+
+    public List<Message> getAllCache() {
         logg.info("Get all cache...");
-        List<Cache> cache = new  ArrayList<>();
-        redisCacheRepository.findAll().forEach(cache::add);
-        return cache;
+        List<Message> message = new  ArrayList<>();
+        redisCacheRepository.findAll().forEach(message::add);
+        return message;
+    }
+
+    public List<Message> getAllCacheForSenderName(String senderName) {
+        logg.info("Get all cache for sender: " + senderName);
+        return redisCacheRepository.findAllBySenderName(senderName);
     }
 }
